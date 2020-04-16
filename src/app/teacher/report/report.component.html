@@ -1,0 +1,100 @@
+<div class="container">
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Subject Attendance Report</mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="flextop">
+        <mat-form-field style="margin-top: 0%;">
+          <mat-label>Choose Date</mat-label>
+          <input
+            (ngModelChange)="dateSelectedF($event)"
+            [(ngModel)]="dateSelected"
+            matInput
+            [matDatepicker]="datepicker1"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="datepicker1"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #datepicker1></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <ngx-charts-pie-chart
+        *ngIf="isFetched"
+        [view]="view"
+        [scheme]="colorScheme"
+        [results]="data"
+        [gradient]="gradient"
+        [legend]="showLegend"
+        [legendPosition]="legendPosition"
+        [labels]="showLabels"
+        [doughnut]="isDoughnut"
+        (select)="onSelect($event)"
+        (activate)="onActivate($event)"
+        (deactivate)="onDeactivate($event)"
+      >
+      </ngx-charts-pie-chart>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Student Attendance Report</mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="flextop">
+        <mat-form-field>
+          <mat-label>select subject</mat-label>
+          <mat-select (selectionChange)="subjectSelected($event)">
+            <mat-option *ngFor="let s of subjects" [value]="s.subject_id">
+              {{ s.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field style="margin-top: 0%;">
+          <mat-label>Choose From</mat-label>
+          <input
+            (ngModelChange)="dateSelectedF1($event,0)"
+            [(ngModel)]="dateFrom"
+            matInput
+            [matDatepicker]="datepickerStudent1"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="datepickerStudent1"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #datepickerStudent1></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field style="margin-top: 0%;">
+          <mat-label>Choose To</mat-label>
+          <input
+            (ngModelChange)="dateSelectedF1($event,1)"
+            [(ngModel)]="dateTo"
+            matInput
+            [matDatepicker]="datepickerStudent2"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="datepickerStudent2"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #datepickerStudent2></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <ngx-charts-bar-vertical
+        *ngIf="isFetchedStudents"
+        [view]="view"
+        [scheme]="colorScheme"
+        [results]="dataStudentAttendance"
+        [gradient]="gradient"
+        [xAxis]="showXAxis"
+        [yAxis]="showYAxis"
+        [legend]="showLegend"
+        [showXAxisLabel]="showXAxisLabel"
+        [showYAxisLabel]="showYAxisLabel"
+        [xAxisLabel]="xAxisLabel"
+        [yAxisLabel]="yAxisLabel"
+        (select)="onSelect($event)"
+      >
+      </ngx-charts-bar-vertical>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

@@ -1,0 +1,141 @@
+<div class="container">
+  <mat-tab-group (selectedTabChange)="studentTabSelected($event)">
+    <mat-tab label="date range">
+      <div class="tab">
+        <div class="flextop">
+          <mat-form-field>
+            <mat-label>select subject</mat-label>
+            <mat-select (selectionChange)="subjectSelected($event)">
+              <mat-option *ngFor="let s of subjects" [value]="s.subject_id">
+                {{ s.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field style="margin-top: 0%;">
+            <mat-label>Choose From</mat-label>
+            <input
+              (ngModelChange)="dateSelected($event, 0)"
+              [(ngModel)]="fromDate"
+              matInput
+              [matDatepicker]="datepicker1"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="datepicker1"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #datepicker1></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field style="margin-top: 0%;">
+            <mat-label>Choose To</mat-label>
+            <input
+              (ngModelChange)="dateSelected($event, 1)"
+              [(ngModel)]="toDate"
+              matInput
+              [matDatepicker]="datepicker2"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="datepicker2"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #datepicker2></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="bottom-container">
+          <div class="table">
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>report</mat-panel-title>
+              </mat-expansion-panel-header>
+              <button
+                type="button"
+                (click)="printClick()"
+                mat-raised-button
+                color="primary"
+                *ngIf="isFetched"
+              >
+                Download
+              </button>
+              <div #mtable>
+                <table mat-table [dataSource]="data" style="width: 100%;">
+                  <ng-container matColumnDef="student_id">
+                    <th mat-header-cell *matHeaderCellDef>Student ID</th>
+                    <td mat-cell *matCellDef="let user">
+                      {{ user.student_id }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="student_name">
+                    <th mat-header-cell *matHeaderCellDef>Student Name</th>
+                    <td mat-cell *matCellDef="let user">
+                      {{ user.student_name }}
+                    </td>
+                  </ng-container>
+                  <ng-container
+                    *ngFor="let j of loopNumber; let i = index"
+                    matColumnDef="{{ i }}"
+                  >
+                    <th mat-header-cell *matHeaderCellDef>
+                      {{ datesForHeaders[i] | date: "dd/MM/yyyy" }}
+                    </th>
+                    <td mat-cell *matCellDef="let user">
+                      <div style="display: none;">{{ user.present[i] }}</div>
+                      <mat-checkbox
+                        [(ngModel)]="user.present[i]"
+                      ></mat-checkbox>
+                    </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="headers"></tr>
+                  <tr mat-row *matRowDef="let row; columns: headers"></tr>
+                </table>
+              </div>
+            </mat-expansion-panel>
+          </div>
+          <div class="side-card">
+            <mat-card style="width: 100%;">
+              <p>days</p>
+              <p>{{ number_of_days }}</p>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="student">
+     
+      <div class="tab grid">
+        <div class="row" style="margin-top: 40px;">
+          <mat-form-field>
+            <mat-label>select student</mat-label>
+            <mat-select (selectionChange)="studentSelected($event)">
+              <mat-option *ngFor="let s of students" [value]="s.student_id">
+                {{ s.student_name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="row" style="margin-top: 40px;">
+          
+          <mat-card class='card-analytics'>
+            
+              <div mat-subheader>Subjects</div>
+              <div class='list-row' *ngFor="let s of subject_attendance">
+                <div>{{s.name}}</div>
+                <span>:</span>
+                <div> {{s.attended | percentage:s.total}}</div>
+              </div>
+          </mat-card>
+
+          <mat-card class='card-analytics'>
+            <div mat-subheader>Aggregate Attendance</div>
+            <div class='list-row'  style="margin-top: 20px;">
+              {{aggregate | percentage:-1}}
+            </div>
+          </mat-card>
+
+        </div>
+
+      </div>
+  
+
+    </mat-tab>
+  </mat-tab-group>
+</div>
